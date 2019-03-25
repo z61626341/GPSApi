@@ -14,6 +14,7 @@ namespace GPSAPI.Models
         public double latitude { get; set; }
         public double longitude { get; set; }
         public string updateTime { get; set; }
+        public string isApprove { get; set; }
 
         public Locations() { }
 

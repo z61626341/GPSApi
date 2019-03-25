@@ -81,11 +81,11 @@ namespace GPSAPI.Controllers
             string msql_init = "";
             if (str_where == "")
             {
-                msql_init = "SELECT * FROM JIMDB.SALES_LOCATE ORDER BY serialNo DESC ";
+                msql_init = "SELECT * FROM JIMDB.SALES_LOCATE ORDER BY UPDATETIME DESC ";
             }
             else
             {
-                msql_init = "SELECT * FROM JIMDB.SALES_LOCATE WHERE 1 = 1 AND deviceNo = '" + str_where + "' ORDER BY serialNo DESC";
+                msql_init = "SELECT * FROM JIMDB.SALES_LOCATE WHERE 1 = 1 AND deviceNo = '" + str_where + "' ORDER BY UPDATETIME DESC";
             }
             connStringSetting = webconn.ConnectionStrings.ConnectionStrings["OracleDbContext"];
             //string connString = connStringSetting.ConnectionString;
@@ -108,7 +108,8 @@ namespace GPSAPI.Controllers
                                 imeiNo = dr_sel["imeiNo"].ToString(),
                                 longitude = Double.Parse(dr_sel["longitude"].ToString()),
                                 latitude = Double.Parse(dr_sel["latitude"].ToString()),
-                                updateTime = dr_sel["updateTime"].ToString()
+                                updateTime = dr_sel["updateTime"].ToString(),
+                                isApprove = dr_sel["isApprove"].ToString()
                             }
                         );
                     }
@@ -150,14 +151,15 @@ namespace GPSAPI.Controllers
                     for (int i = 0; i <locations.Count; i++)
                     {
                         msql_insert +=
-                            "INTO jimdb.sales_locate (serialNo,deviceNo,telNo,imeiNo,longitude,latitude,updatetime) VALUES ('" +
+                            "INTO jimdb.sales_locate (serialNo,deviceNo,telNo,imeiNo,longitude,latitude,updatetime,isApprove) VALUES ('" +
                             locations[i].serialNo + "','" +
                             locations[i].deviceNo + "','" +
                             locations[i].telNo + "','" +
                             locations[i].imeiNo + "'," +
                             locations[i].longitude + "," +
                             locations[i].latitude + "," +
-                            "TO_DATE('" + locations[i].updateTime + "', 'YYYY-MM-DD hh24:mi:ss'))  ";
+                            "TO_DATE('" + locations[i].updateTime + "', 'YYYY-MM-DD hh24:mi:ss')) " + ",'" +
+                            locations[i].isApprove + "' ";
                     }
                     msql_insert += " SELECT * FROM dual";
                     comm_ins.CommandText = msql_insert;
